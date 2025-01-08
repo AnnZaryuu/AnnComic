@@ -9,4 +9,8 @@
 <body>
         <!-- Navbar -->
         <?php include 'includes/navbar/uNavbar.php'; ?>
+
+            <!-- Fotter  -->
+    <?php include 'includes/footer/uFooter.php'; ?>
 </body>
+</html>

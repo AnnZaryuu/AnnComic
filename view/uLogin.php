@@ -14,8 +14,11 @@
 </div>
 <!-- Right: Login Form -->
 <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-  <h1 class="text-2xl font-semibold mb-4">Login</h1>
-  <form action="#" method="POST">
+  <h1 class="text-2xl font-semibold mb-4">Wellcome Back XD</h1>
+  <?php if (isset($error)): ?>
+    <p class="text-red-500 mb-4"><?php echo $error; ?></p>
+  <?php endif; ?>
+  <form action="index.php?modul=login" method="POST">
     <!-- Email Input -->
     <div class="mb-4">
       <label for="Email" class="block text-gray-600">Email</label>
@@ -38,11 +41,9 @@
     <!-- Login Button -->
     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full py-2 px-4 w-full">Login</button>
   </form>
-  <!-- Sign up  Link -->
-  <div class="mt-6 text-blue-500 text-center">
-    <a href="#" class="hover:underline">Sign up Here</a>
-  </div>
 </div>
 </div>
+<!-- Fotter  -->
+<?php include 'includes/footer/uFooter.php'; ?>
 </body>
 </html>

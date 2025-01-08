@@ -19,8 +19,8 @@
                     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center text-white">
                         <div class="ml-10 text-left">
                             <h2 class="text-4xl font-bold mb-4">One Piece</h2>
-                            <p class="max-w-md mb-4">"Kid so focused on building a bird out of scrap metal, he doesn't realize his head got turned into a bird's nest"                            </p>
-                            <button class="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">READ</button>
+                            <p class="max-w-md mb-4">"Kid so focused on building a bird out of scrap metal, he doesn't realize his head got turned into a bird's nest"</p>
+                            <button onclick="window.location.href='index.php?modul=readComic'" class="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">READ</button>
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,15 @@
                     <!-- Repeat Card for other items -->
                 </div>
             </section>
+
+            <!-- Spotify Playlist Section -->
+            <section class="mt-8">
+                <h3 class="text-xl font-bold mb-4 text-white">Listen While You Read</h3>
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/3sFVKF07pPynB0XBLfCMkP?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </section>
         </main>
     </div>
+    <!-- Fotter  -->
+<?php include 'includes/footer/uFooter.php'; ?>
 </body>
 </html>

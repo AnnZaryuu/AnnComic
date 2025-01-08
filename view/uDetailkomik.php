@@ -49,10 +49,13 @@
                             </div>
                             <div class="mt-4">
                                 <span class="text-yellow-500">★★★★★</span>
-                                <span class="text-gray-400">(5 Reviews)</span>
+                                <span class="text-gray-400">(9.08)</span>
+                            </div>
+                            <div class="mt-2">
+                                <p class="text-gray-300">Action, Adventure, Historical</p>
                             </div>
                             <div class="flex space-x-4 mt-4">
-                                <button class="bg-blue-500 px-4 py-2 rounded-lg shadow hover:bg-blue-600">$10.7</button>
+                                <button onclick="window.location.href='index.php?modul=chapter'" class="bg-blue-500 px-4 py-2 rounded-lg shadow hover:bg-blue-600">View Chapter</button>
                                 <button class="bg-gray-600 px-4 py-2 rounded-lg shadow hover:bg-gray-700">Free Sample</button>
                                 <button class="bg-gray-600 px-4 py-2 rounded-lg shadow hover:bg-gray-700">Add Bookmark</button>
                             </div>

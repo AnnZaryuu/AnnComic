@@ -56,7 +56,7 @@
 
     <!-- Card Item -->
   <div>
-    <a href="uDetailkomik.php">
+    <a href="index.php?modul=detailKomik">
     <div class="flex bg-blue-600 rounded-lg overflow-hidden shadow-md">
       <!-- Thumbnail -->
       <img src="../Assets/Poster book/vindland saga poster 1.png" alt="Thumbnail" class="w-24 h-auto">
@@ -101,4 +101,8 @@
     </div>
   </div>
 </div>
+
+    <!-- Fotter  -->
+    <?php include 'includes/footer/uFooter.php'; ?>
 </body>
+</html>
