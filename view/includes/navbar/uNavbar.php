@@ -1,3 +1,14 @@
+<?php
+require_once __DIR__ . '/../../../models/user_model.php';
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$userModel = new UserModel();
+$user = $userModel->getUserById($_SESSION['user_id']);
+?>
+
 <header class="shadow" style="background-color: #232D3F; position: sticky; top: 0; z-index: 100;">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
         <!-- Logo -->
@@ -11,9 +22,9 @@
             <a href="index.php?modul=profile">
                 <button class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-3xl hover:bg-blue-700">
                     <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                        <img src="../../Assets/Icon Profile.jpg" alt="Profile Picture" class="w-full h-full object-cover" />
+                        <img src="<?= htmlspecialchars($user->profilePicture) ?>" alt="Profile Picture" class="w-full h-full object-cover" />
                     </div>
-                    <span>User Name</span>
+                    <span><?= htmlspecialchars($user->name) ?></span>
                 </button>
             </a>
         </div>

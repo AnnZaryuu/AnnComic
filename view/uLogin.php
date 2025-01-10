@@ -14,7 +14,7 @@
 </div>
 <!-- Right: Login Form -->
 <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-  <h1 class="text-2xl font-semibold mb-4">Wellcome Back XD</h1>
+  <h1 class="text-2xl font-semibold mb-4">Welcome Back XD</h1>
   <?php if (isset($error)): ?>
     <p class="text-red-500 mb-4"><?php echo $error; ?></p>
   <?php endif; ?>
@@ -27,7 +27,12 @@
     <!-- Password Input -->
     <div class="mb-4">
       <label for="password" class="block text-gray-600">Password</label>
-      <input type="password" id="password" name="password" class="w-full py-3 pl-4 pr-10 text-gray-700 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" autocomplete="off">
+      <div class="relative">
+        <input type="password" id="password" name="password" class="w-full py-3 pl-4 pr-10 text-gray-700 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" autocomplete="off">
+        <button type="button" id="togglePassword" class="absolute inset-y-0 right-4 text-gray-500 hover:text-gray-700">
+          Show
+        </button>
+      </div>
     </div>
     <!-- Remember Me Checkbox -->
     <div class="mb-4 flex items-center">
@@ -43,7 +48,18 @@
   </form>
 </div>
 </div>
-<!-- Fotter  -->
+<!-- Footer -->
 <?php include 'includes/footer/uFooter.php'; ?>
+
+<script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+
+  togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    this.textContent = type === 'password' ? 'Show' : 'Hide';
+  });
+</script>
 </body>
 </html>

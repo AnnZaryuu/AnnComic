@@ -1,3 +1,20 @@
+<?php
+require_once __DIR__ . '/../models/user_model.php';
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['user_id'])) {
+    // Handle the case where the user is not logged in
+    header('Location: index.php?modul=login');
+    exit();
+}
+
+$userModel = new UserModel();
+$user = $userModel->getUserById($_SESSION['user_id']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,10 +34,10 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
             <!-- Profile Header -->
             <div class="flex items-center gap-4">
-                <img src="../Assets/Icon Profile.jpg" alt="Profile Picture" class="rounded-full w-24 h-24">
+                <img src="<?= htmlspecialchars($user->profilePicture) ?>" alt="Profile Picture" class="rounded-full w-24 h-24">
                 <div>
-                    <h2 class="text-2xl font-bold">Ann Zaryuu</h2>
-                    <button class="text-blue-400 hover:underline text-sm">Edit Profile</button>
+                    <h2 class="text-2xl font-bold"><?= htmlspecialchars($user->name) ?></h2>
+                    <button onclick="window.location.href='index.php?modul=editProfile'" class="text-blue-400 hover:underline text-sm">Edit Profile</button>
                 </div>
             </div>
 
@@ -44,7 +61,7 @@
 
             <!-- Logout Button -->
             <div class="mt-4 text-center">
-                <button class="bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600">
+                <button onclick="window.location.href='index.php?modul=logout'" class="bg-pink-500 text-white py-2 px-4 rounded-lg hover:bg-pink-600">
                     Log out
                 </button>
             </div>

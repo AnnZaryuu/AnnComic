@@ -1,17 +1,16 @@
 <?php
-// Simulasi data chapter
-$dataChapters = [
-    ["id" => 1, "title" => "Chapter 1"],
-    ["id" => 2, "title" => "Chapter 2"],
-    ["id" => 3, "title" => "Chapter 3"],
-    ["id" => 4, "title" => "Chapter 4"],
-    ["id" => 5, "title" => "Chapter 5"],
-    ["id" => 6, "title" => "Chapter 6", "is_new" => true],
-    ["id" => 7, "title" => "Chapter 7"],
-    ["id" => 8, "title" => "Chapter 8"],
-    ["id" => 9, "title" => "Chapter 9"],
-    ["id" => 10, "title" => "Chapter 10"],
-];
+require_once __DIR__ . '/../models/komik_model.php';
+
+$komikId = $_GET['id'] ?? null;
+$komikModel = new KomikModel();
+$komik = $komikModel->getKomikById($komikId);
+
+if (!$komik) {
+    echo "Komik not found!";
+    exit;
+}
+
+$dataChapters = $komik->chapter;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,24 +43,21 @@ $dataChapters = [
             <?php foreach ($dataChapters as $chapter): ?>
                 <div class="flex items-center justify-between border-b border-gray-700 py-4">
                     <span class="text-lg">
-                        <?= htmlspecialchars($chapter['title']) ?>
-                        <?php if (isset($chapter['is_new']) && $chapter['is_new']): ?>
-                            <span class="text-red-500 ml-2">&#8226; New</span>
-                        <?php endif; ?>
+                        <?= htmlspecialchars($chapter) ?>
                     </span>
                     <div class="flex space-x-4">
-                        <a href="read_comic.php?id=<?= $chapter['id'] ?>" class="text-blue-400 hover:text-blue-600">
+                        <a href="read_comic.php?id=<?= $komikId ?>&chapter=<?= urlencode($chapter) ?>" class="text-blue-400 hover:text-blue-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-9A2.25 2.25 0 002.25 5.25v9a2.25 2.25 0 002.25 2.25H9" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 15L21 18.75M21 15l-3.75 3.75" />
                             </svg>
                         </a>
-                        <a href="download_chapter.php?id=<?= $chapter['id'] ?>" class="text-blue-400 hover:text-blue-600">
+                        <a href="download_chapter.php?id=<?= $komikId ?>&chapter=<?= urlencode($chapter) ?>" class="text-blue-400 hover:text-blue-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15V21H8.25V15m3.75-6L15 10.5M9 10.5h6M12 3v12" />
                             </svg>
                         </a>
-                        <button onclick="confirmPurchase(<?= $chapter['id'] ?>, '<?= htmlspecialchars($chapter['title']) ?>')" class="text-green-400 hover:text-green-600">
+                        <button onclick="confirmPurchase(<?= $komikId ?>, '<?= htmlspecialchars($chapter) ?>')" class="text-green-400 hover:text-green-600">
                             Buy Now
                         </button>
                     </div>
@@ -90,7 +86,7 @@ $dataChapters = [
 
             message.textContent = `Are you sure you want to purchase ${title}?`;
             confirmButton.onclick = function () {
-                window.location.href = `buy_chapter.php?id=${id}`;
+                window.location.href = `index.php?modul=buyChapter&id=${id}`;
             };
 
             modal.classList.add('active');

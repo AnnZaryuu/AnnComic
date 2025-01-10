@@ -30,18 +30,38 @@
 
             <!-- Popular Section -->
             <section>
-                <h3 class="text-xl font-bold mb-4">Popular this month</h3>
+            <h3 class="text-xl font-bold text-white my-6">Popular this month</h3>
                 <div class="grid grid-cols-5 gap-4">
                     <!-- Card -->
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="../Assets/Poster book/One Piace.png" alt="One Piece" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h4 class="font-bold text-lg">One Piece</h4>
-                            <p class="text-gray-600">Chapter 1012</p>
-                            <p class="text-yellow-500 font-semibold">9.36</p>
-                        </div>
-                    </div>
-                    <!-- Repeat Card for other items -->
+                    <?php
+                        require_once __DIR__ . '/../models/komik_model.php';
+                        $komikModel = new KomikModel();
+                        $komikList = $komikModel->getKomikList();
+                        foreach ($komikList as $komik) {
+                            echo '<div class="bg-white shadow-lg rounded-lg overflow-hidden">';
+                            echo '<a href="index.php?modul=detailKomik&id=' . $komik->id . '">';
+                            echo '<img src="../Assets/' . $komik->image . '" alt="' . $komik->judul . '" class="w-full h-48 object-cover">';
+                            echo '<div class="p-4">';
+                            echo '<h4 class="font-bold text-lg">' . $komik->judul . '</h4>';
+                            echo '<p class="text-gray-600">';
+                            if (is_array($komik->chapter)) {
+                                $totalChapters = count($komik->chapter);
+                                if ($totalChapters > 1) {
+                                    echo '' . $komik->chapter[0] . '<br>';
+                                    echo '' . $komik->chapter[$totalChapters - 1] . '<br>';
+                                } else {
+                                    echo 'Chapter 1: ' . $komik->chapter[0] . '<br>';
+                                }
+                            } else {
+                                echo $komik->chapter;
+                            }
+                            echo '</p>';
+                            echo '<p class="text-yellow-500 font-semibold">' . $komik->rating . '</p>';
+                            echo '</div>';
+                            echo '</a>';
+                            echo '</div>';
+                        }
+                        ?>
                 </div>
             </section>
 
