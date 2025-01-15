@@ -19,17 +19,65 @@ class KomikModel {
     }
 
     public function initializeDefaultKomik() {
-        $this->addKomik(new Komik($this->nextId++, 'Naruto', 'Masashi Kishimoto', 'Shueisha', 30000, ['Action', 'Adventure', 'Fantasy'], '../Assets/Poster book/Naruto.png', ['Chapter 1', 'Chapter 2', 'Chapter 3'], '9.0', 'Naruto Uzumaki, a young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.', '../Assets/Poster landscape/Landscape Naruto.png', '../Assets/Authors/Masashi_Kishimoto.png', '../Assets/Comic/Manga/Naruto/Naruto_Sample.pdf'));
-        $this->addKomik(new Komik($this->nextId++, 'One Piece', 'Eiichiro Oda', 'Shueisha', 35000, ['Adventure', 'Action', 'Comedy'], '../Assets/Poster book/One Piece.png', ['Chapter 1', 'Chapter 2', 'Chapter 3'], '9.36', 'Monkey D. Luffy, a boy whose body gained the properties of rubber after unintentionally eating a Devil Fruit, sets off on a journey to find the One Piece and become the Pirate King.', '../Assets/Poster landscape/One_Piece_bg.png', '../Assets/Authors/Eiichiro_Oda.png', '../Assets/Comic/Manga/OnePiece/OnePiece_Sample.pdf'));
-        $this->addKomik(new Komik($this->nextId++, 'Attack on Titan', 'Hajime Isayama', 'Kodansha', 40000, ['Action', 'Drama', 'Fantasy'], '../Assets/Poster book/Attack on Titan.png', ['Chapter 1', 'Chapter 2', 'Chapter 3'], '9.5', 'Eren Yeager, his adoptive sister Mikasa Ackerman, and their friend Armin Arlert join the military to fight against the Titans after their hometown is destroyed and Eren\'s mother is killed.', '../Assets/Poster landscape/Shingeki no Kyojin.png', '../Assets/Authors/Hajime_Isayama.png', '../Assets/Sample/AttackOnTitan_Sample.pdf'));
-        $this->addKomik(new Komik($this->nextId++, 'Vinland Saga', 'Yukimura Makoto', 'Afternoon', 4000, ['Action', 'Adventure', 'Historical'], '../Assets/Poster book/vindland saga poster 1.png', ['Chapter 1', 'Chapter 2', 'Chapter 3'], '9.08', 'Thorfinn tumbuh mendengarkan cerita tentang Vinland...', '../Assets/Poster landscape/Vinland_Saga_bg.png', '../Assets/Authors/Yukimura_Makoto.png', '../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Sample.pdf'));
-        $this->addKomik(new Komik($this->nextId++, 'Solo Leveling', 'Chugong', 'D&C Media', 45000, ['Fantasy', 'Action', 'Adventure'], '../Assets/Poster book/Solo Leveling.png', ['Chapter 1', 'Chapter 2', 'Chapter 3'], '9.36', 'Sung Jin-Woo, seorang hunter lemah yang berubah menjadi hunter terkuat setelah menyelesaikan quest di dalam dungeon rahasia.', '../Assets/Poster landscape/Solo_Leveling_bg.png', '../Assets/Authors/Chugong.png', '../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Sample.pdf'));
-        $this->addKomik(new Komik($this->nextId++, 'Versatile Mage', 'Chaos', 'Qidian', 30000, ['Fantasy', 'Action', 'Adventure'], '../Assets/Poster book/Versatile Mage.png', ['Chapter 1', 'Chapter 2', 'Chapter 3'], '8.78', 'Mo Fan, seorang siswa yang menemukan bahwa dunia telah berubah menjadi dunia sihir dan dia memiliki kemampuan untuk mengendalikan elemen-elemen sihir.', '../Assets/Poster landscape/Versatile_Mage_bg.png', '../Assets/Authors/Chaos.png', '../Assets/Comic/Manga/VersatileMage/VersatileMage_Sample.pdf'));
+        $this->komikList = [
+            new Komik(2, 'Naruto', 'Masashi Kishimoto', 'Shueisha', 3000, ['Action', 'Adventure', 'Fantasy'], 'Assets/uploads/Poster book/Naruto.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter3.pdf')
+            ], '9.0', 'Naruto Uzumaki, a young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.', 'Assets/uploads/Poster landscape/Landscape Naruto.png', 'Assets/uploads/Authors/Masashi_Kishimoto.png', 'Assets/Comic/Manga/Naruto/Naruto_Sample.pdf'),
+            
+            new Komik(3, 'Tensei shitara Slime Datta Ken', 'Fuse', 'Shounen Sirius', 3000, ['Isekai', 'Reincarnation', 'Fantasy'], 'Assets/uploads/Poster book/Tensura.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/Tensura/Tensura_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/Tensura/Tensura_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/Tensura/Tensura_Chapter3.pdf'),
+                new Chapter(4, 'Chapter 4', __DIR__ . '/../Assets/Comic/Manga/Tensura/Tensura_Chapter4.pdf')
+            ], '8.37', 'Satoru Mikami, pekerja kantoran berusia 37 tahun, tewas setelah ditikam perampok di Tokyo. Ketika meninggal, ia mendengar suara misterius seperti AI. Saat tersadar, Satoru mendapati dirinya bereinkarnasi sebagai slime di sebuah gua aneh, dengan kemampuan menyerap dan meniru bentuk serta kemampuan apapun yang ia telan. Dalam penjelajahannya, ia bertemu naga raksasa bernama Veldora yang telah disegel selama 300 tahun. Setelah berteman dan berjanji membantu membebaskan Veldora, ia diberi nama baru: "Rimuru Tempest." Dengan tubuh dan kemampuan barunya, Rimuru memulai petualangan besar yang akan mengubah takdirnya dan dunia barunya.', 'Assets/uploads/Poster landscape/Tensura Landscape.png', 'Assets/uploads/Author/Default Photo.png', 'Assets/Sample/Tense.Shita.Slime.Datt.Ken Free Sampel.pdf'),
+            
+            new Komik(4, 'One Piece', 'Eiichiro Oda', 'Shueisha', 3500, ['Adventure', 'Action', 'Comedy'], 'Assets/uploads/Poster book/One Piece.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/OnePiece/OnePiece_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/OnePiece/OnePiece_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/OnePiece/OnePiece_Chapter3.pdf')
+            ], '9.36', 'Monkey D. Luffy, a boy whose body gained the properties of rubber after unintentionally eating a Devil Fruit, sets off on a journey to find the One Piece and become the Pirate King.', 'Assets/uploads/Poster landscape/One_Piece_bg.png', 'Assets/uploads/Authors/Eiichiro_Oda.png', 'Assets/Comic/Manga/OnePiece/OnePiece_Sample.pdf'),
+            
+            new Komik(5, 'Attack on Titan', 'Hajime Isayama', 'Kodansha', 4000, ['Action', 'Drama', 'Fantasy'], 'Assets/uploads/Poster book/Attack on Titan.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/AttackOnTitan/AttackOnTitan_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/AttackOnTitan/AttackOnTitan_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/AttackOnTitan/AttackOnTitan_Chapter3.pdf')
+            ], '9.5', 'Eren Yeager, his adoptive sister Mikasa Ackerman, and their friend Armin Arlert join the military to fight against the Titans after their hometown is destroyed and Eren\'s mother is killed.', 'Assets/uploads/Poster landscape/Shingeki no Kyojin.png', 'Assets/uploads/Author/Hajime_Isayama.png', 'Assets/Sample/AttackOnTitan_Sample.pdf'),
+            
+            new Komik(6, 'Vinland Saga', 'Yukimura Makoto', 'Afternoon', 4000, ['Action', 'Adventure', 'Historical'], 'Assets/uploads/Poster book/vindland saga poster 1.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter3.pdf')
+            ], '9.08', 'Thorfinn tumbuh mendengarkan cerita tentang Vinland...', 'Assets/uploads/Poster landscape/Vinland_Saga_bg.png', 'Assets/uploads/Authors/Yukimura_Makoto.png', 'Assets/Comic/Manga/VinlandSaga/VinlandSaga_Sample.pdf'),
+            
+            new Komik(7, 'Solo Leveling', 'Chugong', 'D&C Media', 4500, ['Fantasy', 'Action', 'Adventure'], 'Assets/uploads/Poster book/Solo Leveling.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter3.pdf')
+            ], '9.36', 'Sung Jin-Woo, seorang hunter lemah yang berubah menjadi hunter terkuat setelah menyelesaikan quest di dalam dungeon rahasia.', 'Assets/uploads/Poster landscape/Solo_Leveling_bg.png', 'Assets/uploads/Author/Ki-Hong-Lee.png', 'Assets/Comic/Manga/SoloLeveling/SoloLeveling_Sample.pdf'),
+            
+            new Komik(8, 'Versatile Mage', 'Chaos', 'Qidian', 3000, ['Fantasy', 'Action', 'Adventure'], 'Assets/uploads/Poster book/Versatile Mage.png', [
+                new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/VersatileMage/VersatileMage_Chapter1.pdf'),
+                new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/VersatileMage/VersatileMage_Chapter2.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/VersatileMage/VersatileMage_Chapter3.pdf')
+            ], '8.78', 'Mo Fan, seorang siswa yang menemukan bahwa dunia telah berubah menjadi dunia sihir dan dia memiliki kemampuan untuk mengendalikan elemen-elemen sihir.', 'Assets/uploads/Poster landscape/Versatile_Mage_bg.png', 'Assets/uploads/Authors/Chaos.png', 'Assets/Comic/Manga/VersatileMage/VersatileMage_Sample.pdf')
+        ];
         // Add more default komik as needed
     }
 
     public function addKomik(Komik $komik) {
-        $this->komikList[] = $komik;
+        // Assign ID 1 to the new comic
+        $komik->id = 1;
+
+        // Decrement the IDs of all existing comics by 1
+        foreach ($this->komikList as $existingKomik) {
+            $existingKomik->id++;
+        }
+
+        // Add the new comic to the beginning of the list
+        array_unshift($this->komikList, $komik);
+
         $this->saveToSession();
     }
 
@@ -37,7 +85,7 @@ class KomikModel {
         $_SESSION['komikList'] = serialize($this->komikList);
     }
 
-    public function getKomikList() {
+    public function getKomikList(): array {
         return $this->komikList;
     }
 
@@ -50,7 +98,7 @@ class KomikModel {
         return null;
     }    
 
-    public function updateKomik($komikId, $judul, $penulis, $penerbit, $harga, $genre) {
+    public function updateKomik($komikId, $judul, $penulis, $penerbit, $harga, $genre, $image, $chapters, $rating, $sinopsis, $background, $author, $freeSample) {
         foreach ($this->komikList as $komik) {
             if ($komik->id == $komikId) {
                 $komik->judul = $judul;
@@ -58,6 +106,13 @@ class KomikModel {
                 $komik->penerbit = $penerbit;
                 $komik->harga = $harga;
                 $komik->genre = $genre;
+                $komik->image = $image;
+                $komik->chapters = $chapters;
+                $komik->rating = $rating;
+                $komik->sinopsis = $sinopsis;
+                $komik->background = $background;
+                $komik->author = $author;
+                $komik->freeSample = $freeSample;
                 $this->saveToSession();
                 return true;
             }
@@ -94,6 +149,24 @@ class KomikModel {
             }
         }
         return $relatedKomik;
+    }
+
+    public function fetchComics($sort) {
+        $comics = $this->komikList;
+
+        if ($sort == 'alphabet') {
+            usort($comics, function($a, $b) {
+                return strcmp($a->judul, $b->judul);
+            });
+        }
+
+        return $comics;
+    }
+
+    public function getKomikByGenre($genre) {
+        return array_filter($this->komikList, function($komik) use ($genre) {
+            return in_array($genre, $komik->genre);
+        });
     }
 }
 ?>

@@ -8,7 +8,7 @@
 </head>
 <body class="bg-black font-sans">
     <!-- Navbar -->
-    <?php include 'includes/navbar/uNavbar.php'; ?>
+    <?php include __DIR__ . '/includes/navbar/uNavbar.php'; ?>
     <!-- Sidebar & Content -->
     <div class="flex">
         <!-- Main Content -->
@@ -20,7 +20,7 @@
                         <div class="ml-10 text-left">
                             <h2 class="text-4xl font-bold mb-4">One Piece</h2>
                             <p class="max-w-md mb-4">"Kid so focused on building a bird out of scrap metal, he doesn't realize his head got turned into a bird's nest"</p>
-                            <button onclick="window.location.href='index.php?modul=readComic'" class="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">READ</button>
+                            <button onclick="window.location.href='index.php?modul=readComic&id=<?php echo htmlspecialchars($komik->id ?? ''); ?>&chapter=1'" class="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">READ</button>
                         </div>
                     </div>
                 </div>
@@ -36,24 +36,25 @@
                     <?php
                         require_once __DIR__ . '/../models/komik_model.php';
                         $komikModel = new KomikModel();
-                        $komikList = $komikModel->getKomikList();
+                        $selectedGenre = $_GET['genre'] ?? null;
+                        $komikList = $selectedGenre ? $komikModel->getKomikByGenre($selectedGenre) : $komikModel->getKomikList();
                         foreach ($komikList as $komik) {
                             echo '<div class="bg-white shadow-lg rounded-lg overflow-hidden">';
                             echo '<a href="index.php?modul=detailKomik&id=' . $komik->id . '">';
-                            echo '<img src="../Assets/' . $komik->image . '" alt="' . $komik->judul . '" class="w-full h-48 object-cover">';
+                            echo '<img src="' . $komik->image . '" alt="' . $komik->judul . '" class="w-full h-48 object-cover">'; // Update the image path
                             echo '<div class="p-4">';
                             echo '<h4 class="font-bold text-lg">' . $komik->judul . '</h4>';
                             echo '<p class="text-gray-600">';
-                            if (is_array($komik->chapter)) {
-                                $totalChapters = count($komik->chapter);
+                            if (is_array($komik->chapters)) {
+                                $totalChapters = count($komik->chapters);
                                 if ($totalChapters > 1) {
-                                    echo '' . $komik->chapter[0] . '<br>';
-                                    echo '' . $komik->chapter[$totalChapters - 1] . '<br>';
+                                    echo '' . $komik->chapters[0]->title . '<br>';
+                                    echo '' . $komik->chapters[$totalChapters - 1]->title . '<br>';
                                 } else {
-                                    echo 'Chapter 1: ' . $komik->chapter[0] . '<br>';
+                                    echo 'Chapter 1: ' . $komik->chapters[0]->title . '<br>';
                                 }
                             } else {
-                                echo $komik->chapter;
+                                echo $komik->chapters->title;
                             }
                             echo '</p>';
                             echo '<p class="text-yellow-500 font-semibold">' . $komik->rating . '</p>';

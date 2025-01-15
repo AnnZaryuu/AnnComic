@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/komik_model.php';
 
-
 $komikId = $_GET['id'] ?? null;
 $komikModel = new KomikModel();
 $komik = $komikModel->getKomikById($komikId);
@@ -43,34 +42,34 @@ if (!$komik) {
 
         <!-- Background detail -->
         <section class="mb-6">
-        <div class="relative bg-cover bg-center rounded-lg overflow-hidden" style="background-image: url('<?php echo $komik->background; ?>'); height: 300px;">
+            <div class="relative bg-cover bg-center rounded-lg overflow-hidden" style="background-image: url('<?php echo htmlspecialchars($komik->background ?? ''); ?>'); height: 300px;">
                 <div class="absolute inset-0 bg-black bg-opacity-25 flex items-center text-white p-8">
                     <!-- Kontainer Utama -->
                     <div class="flex space-x-8">
                         <!-- Komik Cover -->
                         <div class="flex-shrink-0">
-                            <img src="../Assets/<?php echo $komik->image; ?>" alt="<?php echo $komik->judul; ?>" class="w-40 h-auto rounded-lg shadow-lg">
+                            <img src="<?php echo htmlspecialchars($komik->image ?? ''); ?>" alt="<?php echo htmlspecialchars($komik->judul ?? ''); ?>" class="w-40 h-auto rounded-lg shadow-lg">
                         </div>
                         <!-- Komik Detail -->
                         <div>
-                            <h1 class="text-4xl font-bold"><?php echo $komik->judul; ?></h1>
+                            <h1 class="text-4xl font-bold"><?php echo htmlspecialchars($komik->judul ?? ''); ?></h1>
                             <div class="flex items-center space-x-4 mt-2">
-                                <img src="<?php echo $komik->author; ?>" alt="<?php echo $komik->penulis; ?>" class="w-12 h-12 rounded-full">
+                                <img src="<?php echo htmlspecialchars($komik->author ?? ''); ?>" alt="<?php echo htmlspecialchars($komik->penulis ?? ''); ?>" class="w-12 h-12 rounded-full">
                                 <div>
-                                    <p class="font-semibold"><?php echo $komik->penulis; ?></p>
-                                    <p class="text-gray-400">Serialization: <?php echo $komik->penerbit; ?></p>
+                                    <p class="font-semibold"><?php echo htmlspecialchars($komik->penulis ?? ''); ?></p>
+                                    <p class="text-gray-400">Serialization: <?php echo htmlspecialchars($komik->penerbit ?? ''); ?></p>
                                 </div>
                             </div>
                             <div class="mt-4">
                                 <span class="text-yellow-500">★★★★★</span>
-                                <span class="text-gray-400">(<?php echo $komik->rating; ?>)</span>
+                                <span class="text-gray-400">(<?php echo htmlspecialchars($komik->rating ?? ''); ?>)</span>
                             </div>
                             <div class="mt-2">
-                                <p class="text-gray-300"><?php echo is_array($komik->genre) ? implode(', ', $komik->genre) : $komik->genre; ?></p>
+                                <p class="text-gray-300"><?php echo is_array($komik->genre) ? implode(', ', $komik->genre) : htmlspecialchars($komik->genre ?? ''); ?></p>
                             </div>
                             <div class="flex space-x-4 mt-4">
-                                <button onclick="window.location.href='index.php?modul=chapter&id=<?php echo $komik->id; ?>'" class="bg-blue-500 px-4 py-2 rounded-lg shadow hover:bg-blue-600">View Chapter</button>
-                                <button onclick="window.location.href='index.php?modul=freeSample&id=<?php echo $komik->id; ?>'" class="bg-gray-600 px-4 py-2 rounded-lg shadow hover:bg-gray-700">Free Sample</button>
+                                <button onclick="window.location.href='index.php?modul=chapter&id=<?php echo urlencode($komik->id ?? ''); ?>'" class="bg-blue-500 px-4 py-2 rounded-lg shadow hover:bg-blue-600">View Chapter</button>
+                                <button onclick="window.location.href='index.php?modul=freeSample&id=<?php echo urlencode($komik->id ?? ''); ?>'" class="bg-gray-600 px-4 py-2 rounded-lg shadow hover:bg-gray-700">Free Sample</button>
                                 <button class="bg-gray-600 px-4 py-2 rounded-lg shadow hover:bg-gray-700">Add Bookmark</button>
                             </div>
                         </div>
@@ -83,7 +82,7 @@ if (!$komik) {
                 <!-- Judul About -->
                 <h1 class="text-2xl font-extrabold font-bold text-white">About</h1>
                 <!-- Sinopsis -->
-                <p class="text-gray-300 mt-4"><?php echo $komik->sinopsis; ?></p>
+                <p class="text-gray-300 mt-4"><?php echo htmlspecialchars($komik->sinopsis ?? ''); ?></p>
             </div>
             <div>
                 <!-- Judul Chapter -->

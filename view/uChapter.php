@@ -10,7 +10,7 @@ if (!$komik) {
     exit;
 }
 
-$dataChapters = $komik->chapter;
+$dataChapters = $komik->chapters;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,8 +18,13 @@ $dataChapters = $komik->chapter;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chapter List</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
+        body {
+            background-image: url('../Assets/Wallpaper_background.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -36,28 +41,27 @@ $dataChapters = $komik->chapter;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 bg-opacity-75 text-white">
+    <!-- Navbar -->
+    <?php include 'includes/navbar/uNavbar.php'; ?>
+
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6">Chapter List</h1>
         <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+        <div class="flex items-center mb-4 space-x-2">
+            <p class="text-lg">Price:</p>
+            <p class="text-lg font-bold bg-green-400 text-white px-2 py-1 rounded"><?= htmlspecialchars($komik->harga) ?> IDR</p>
+        </div> 
             <?php foreach ($dataChapters as $chapter): ?>
-                <div class="flex items-center justify-between border-b border-gray-700 py-4">
+                <div class="flex items-center justify-between border-b border-gray-700 py-4 rounded-lg">
                     <span class="text-lg">
-                        <?= htmlspecialchars($chapter) ?>
+                        <?= htmlspecialchars($chapter->title) ?>
                     </span>
                     <div class="flex space-x-4">
-                        <a href="read_comic.php?id=<?= $komikId ?>&chapter=<?= urlencode($chapter) ?>" class="text-blue-400 hover:text-blue-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-9A2.25 2.25 0 002.25 5.25v9a2.25 2.25 0 002.25 2.25H9" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 15L21 18.75M21 15l-3.75 3.75" />
-                            </svg>
-                        </a>
-                        <a href="download_chapter.php?id=<?= $komikId ?>&chapter=<?= urlencode($chapter) ?>" class="text-blue-400 hover:text-blue-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15V21H8.25V15m3.75-6L15 10.5M9 10.5h6M12 3v12" />
-                            </svg>
-                        </a>
-                        <button onclick="confirmPurchase(<?= $komikId ?>, '<?= htmlspecialchars($chapter) ?>')" class="text-green-400 hover:text-green-600">
+                        <button onclick="rentChapter(<?= $komikId ?>, '<?= htmlspecialchars($chapter->title) ?>')" class="text-yellow-400 hover:text-yellow-600">
+                            Rent
+                        </button>
+                        <button onclick="confirmPurchase(<?= $komikId ?>, '<?= htmlspecialchars($chapter->title) ?>')" class="text-green-400 hover:text-green-600">
                             Buy Now
                         </button>
                     </div>
@@ -87,6 +91,19 @@ $dataChapters = $komik->chapter;
             message.textContent = `Are you sure you want to purchase ${title}?`;
             confirmButton.onclick = function () {
                 window.location.href = `index.php?modul=buyChapter&id=${id}`;
+            };
+
+            modal.classList.add('active');
+        }
+
+        function rentChapter(id, title) {
+            const modal = document.getElementById('purchaseModal');
+            const message = document.getElementById('modalMessage');
+            const confirmButton = document.getElementById('confirmButton');
+
+            message.textContent = `Are you sure you want to rent ${title}?`;
+            confirmButton.onclick = function () {
+                window.location.href = `index.php?modul=rentChapter&id=${id}`;
             };
 
             modal.classList.add('active');

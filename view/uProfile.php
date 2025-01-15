@@ -13,6 +13,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $userModel = new UserModel();
 $user = $userModel->getUserById($_SESSION['user_id']);
+
+if (!$user) {
+    header('Location: index.php?modul=logout');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +29,7 @@ $user = $userModel->getUserById($_SESSION['user_id']);
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Untuk chart -->
     <script src="https://cdn.tailwindcss.com"></script> <!-- Tailwind -->
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white" style="background-image: url('../Assets/Wallpaper_background.jpg'); background-size: cover; background-position: center;">
 
     <!-- Navbar -->
     <?php include 'includes/navbar/uNavbar.php'; ?>
@@ -34,10 +39,12 @@ $user = $userModel->getUserById($_SESSION['user_id']);
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
             <!-- Profile Header -->
             <div class="flex items-center gap-4">
-                <img src="<?= htmlspecialchars($user->profilePicture) ?>" alt="Profile Picture" class="rounded-full w-24 h-24">
+                <img src="<?= htmlspecialchars($user->profilePicture ?? '') ?>" alt="Profile Picture" class="rounded-full w-24 h-24">
                 <div>
-                    <h2 class="text-2xl font-bold"><?= htmlspecialchars($user->name) ?></h2>
-                    <button onclick="window.location.href='index.php?modul=editProfile'" class="text-blue-400 hover:underline text-sm">Edit Profile</button>
+                    <h2 class="text-2xl font-bold"><?= htmlspecialchars($user->name ?? '') ?></h2>
+                    <p class="text-sm">Saldo: <?= htmlspecialchars($user->saldo ?? '0') ?> IDR</p>
+                    <button onclick="window.location.href='index.php?modul=editProfile&profile_picture=<?= urlencode($user->profilePicture ?? '') ?>'" class="text-blue-400 hover:underline text-sm">Edit Profile</button>
+                    <button onclick="document.getElementById('topupModal').classList.remove('hidden')" class="text-green-400 hover:underline text-sm">Top-Up Saldo</button>
                 </div>
             </div>
 
@@ -65,6 +72,24 @@ $user = $userModel->getUserById($_SESSION['user_id']);
                     Log out
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Top-Up Modal -->
+    <div id="topupModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-xl font-bold mb-4">Top-Up Saldo</h2>
+            <form method="POST" action="index.php?modul=editProfile">
+                <input type="hidden" name="topup" value="true">
+                <div class="mb-4">
+                    <label for="topup_amount" class="block text-sm font-medium text-gray-300">Top-Up Amount</label>
+                    <input type="number" name="topup_amount" id="topup_amount" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm" required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="document.getElementById('topupModal').classList.add('hidden')" class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mr-2">Cancel</button>
+                    <button type="submit" class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Top-Up</button>
+                </div>
+            </form>
         </div>
     </div>
 
