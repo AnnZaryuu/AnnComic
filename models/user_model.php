@@ -1,7 +1,22 @@
 <?php
 require_once __DIR__ . '/../domain_object/node_user.php';
 
-class UserModel {
+interface UserRepositoryInterface {
+    public function addUser(User $user): void;
+    public function getUserById(int $userId): ?User;
+    public function updateUser(int $userId, string $name, int $saldo, string $email, ?string $profilePicture, ?string $password): bool;
+    public function deleteUser(int $userId): bool;
+    public function getUserList(): array;
+    public function getUserByEmail(string $email): ?User;
+    public function purchaseComic(int $userId, int $comicId, int $chapter, float $price): bool;
+    public function getPurchasedComics(int $userId): array;
+    public function rentComic(int $userId, int $comicId, int $chapter, float $price): bool;
+    public function getRentedComics(int $userId): array;
+    public function requestTopUp(int $userId, float $amount): void;
+    public function approveTopUp(int $userId, float $amount): bool;
+}
+
+class UserModel implements UserRepositoryInterface {
     private $userList = [];
     private $nextId = 1;
 
@@ -18,26 +33,17 @@ class UserModel {
         }
     }
 
-    public function initializeDefaultUsers() {
+    private function initializeDefaultUsers(): void {
         $this->addUser(new User($this->nextId++, 'AnnZaryuu', 'anjar@gmail.com', password_hash('anjar', PASSWORD_DEFAULT), 10000, '../Assets/PhotoProfile/Thorfin Karlsefni.jpg'));
         $this->addUser(new User($this->nextId++, 'User2', 'user2@example.com', password_hash('user123', PASSWORD_DEFAULT), 2000, 'path/to/profile2.png'));
-        // Add more default users as needed
     }
 
-    public function addUser(User $user) {
+    public function addUser(User $user): void {
         $this->userList[] = $user;
         $this->saveToSession();
     }
 
-    private function saveToSession() {
-        $_SESSION['userList'] = serialize($this->userList);
-    }
-
-    public function getUserList(): array {
-        return $this->userList;
-    }
-
-    public function getUserById($userId) {
+    public function getUserById(int $userId): ?User {
         foreach ($this->userList as $user) {
             if ($user->userId == $userId) {
                 return $user;
@@ -46,7 +52,7 @@ class UserModel {
         return null;
     }
 
-    public function updateUser($userId, $name,$saldo , $email, $profilePicture = null, $password = null) {
+    public function updateUser(int $userId, string $name, int $saldo, string $email, ?string $profilePicture, ?string $password): bool {
         foreach ($this->userList as $user) {
             if ($user->userId == $userId) {
                 $user->name = $name;
@@ -65,11 +71,11 @@ class UserModel {
         return false;
     }
 
-    public function deleteUser($userId) {
+    public function deleteUser(int $userId): bool {
         foreach ($this->userList as $key => $user) {
             if ($user->userId == $userId) {
                 unset($this->userList[$key]);
-                $this->userList = array_values($this->userList); // Reindex array after deletion
+                $this->userList = array_values($this->userList);
                 $this->saveToSession();
                 return true;
             }
@@ -77,7 +83,11 @@ class UserModel {
         return false;
     }
 
-    public function getUserByEmail($email) {
+    public function getUserList(): array {
+        return $this->userList;
+    }
+
+    public function getUserByEmail(string $email): ?User {
         foreach ($this->userList as $user) {
             if ($user->email == $email) {
                 return $user;
@@ -86,143 +96,64 @@ class UserModel {
         return null;
     }
 
-    public function purchaseComic($userId, $comicId, $chapter, $price) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                if ($user->saldo >= $price) {
-                    $user->saldo -= $price;
-                    if (!isset($user->purchasedComics)) {
-                        $user->purchasedComics = [];
-                    }
-                    $user->purchasedComics[$comicId][$chapter] = true;
-                    $this->saveToSession();
-                    return true;
-                } else {
-                    return false;
-                }
+    public function purchaseComic(int $userId, int $comicId, int $chapter, float $price): bool {
+        $user = $this->getUserById($userId);
+        if ($user && $user->saldo >= $price) {
+            $user->saldo -= $price;
+            if (!isset($user->purchasedComics)) {
+                $user->purchasedComics = [];
             }
+            $user->purchasedComics[$comicId][$chapter] = true;
+            $this->saveToSession();
+            return true;
         }
-        return false; // User not found
+        return false;
     }
 
-    public function getPurchasedComics($userId) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                return $user->purchasedComics;
-            }
-        }
-        return [];
+    public function getPurchasedComics(int $userId): array {
+        $user = $this->getUserById($userId);
+        return $user ? ($user->purchasedComics ?? []) : [];
     }
 
-    public function requestTopUp($userId, $amount) {
-        // Save the top-up request to the session or database
+    public function rentComic(int $userId, int $comicId, int $chapter, float $price): bool {
+        $user = $this->getUserById($userId);
+        if ($user && $user->saldo >= $price) {
+            $user->saldo -= $price;
+            $expiryDate = date('Y-m-d H:i:s', strtotime('+3 days'));
+            if (!isset($user->rentedComics)) {
+                $user->rentedComics = [];
+            }
+            $user->rentedComics[$comicId][$chapter] = $expiryDate;
+            $this->saveToSession();
+            return true;
+        }
+        return false;
+    }
+
+    public function getRentedComics(int $userId): array {
+        $user = $this->getUserById($userId);
+        return $user ? ($user->rentedComics ?? []) : [];
+    }
+
+    public function requestTopUp(int $userId, float $amount): void {
         if (!isset($_SESSION['topUpRequests'])) {
             $_SESSION['topUpRequests'] = [];
         }
         $_SESSION['topUpRequests'][] = ['userId' => $userId, 'amount' => $amount];
     }
 
-    public function approveTopUp($userId, $amount) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                $user->saldo += $amount;
-                $this->saveToSession();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function rentComic($userId, $comicId, $chapter, $price) {
+    public function approveTopUp(int $userId, float $amount): bool {
         $user = $this->getUserById($userId);
-        if ($user && $user->saldo >= $price) {
-            $newSaldo = $user->saldo - $price;
-            $this->updateUserSaldo($userId, $newSaldo);
-
-            $expiryDate = date('Y-m-d H:i:s', strtotime('+3 days'));
-            $this->addComicToLibrary($userId, $comicId, $chapter, $expiryDate);
-
+        if ($user) {
+            $user->saldo += $amount;
+            $this->saveToSession();
             return true;
         }
         return false;
     }
 
-    private function updateUserSaldo($userId, $newSaldo) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                $user->saldo = $newSaldo;
-                $this->saveToSession();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function addComicToLibrary($userId, $comicId, $chapter, $expiryDate) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                if (!isset($user->rentedComics)) {
-                    $user->rentedComics = [];
-                }
-                $user->rentedComics[$comicId][$chapter] = $expiryDate;
-                $this->saveToSession();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function removeExpiredComics() {
-        $currentDate = date('Y-m-d H:i:s');
-        foreach ($this->userList as $user) {
-            if (isset($user->rentedComics)) {
-                foreach ($user->rentedComics as $comicId => $chapters) {
-                    foreach ($chapters as $chapter => $expiryDate) {
-                        if ($expiryDate < $currentDate) {
-                            unset($user->rentedComics[$comicId][$chapter]);
-                        }
-                    }
-                }
-            }
-        }
-        $this->saveToSession();
-    }
-
-    public function isComicInLibrary($userId, $comicId) {
-        $user = $this->getUserById($userId);
-        if ($user && isset($user->rentedComics) && array_key_exists($comicId, $user->rentedComics)) {
-            return true;
-        }
-        return false;
-    }
-
-    public function getRentedComics($userId) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                return $user->rentedComics;
-            }
-        }
-        return [];
-    }
-
-    public function addPurchasedChapter($userId, $comicId, $chapter) {
-        $purchasedComics = $this->getPurchasedComics($userId);
-        if (!isset($purchasedComics[$comicId])) {
-            $purchasedComics[$comicId] = [];
-        }
-        $purchasedComics[$comicId][$chapter] = true;
-        $this->savePurchasedComics($userId, $purchasedComics);
-    }
-
-    private function savePurchasedComics($userId, $purchasedComics) {
-        foreach ($this->userList as $user) {
-            if ($user->userId == $userId) {
-                $user->purchasedComics = $purchasedComics;
-                $this->saveToSession();
-                return true;
-            }
-        }
-        return false;
+    private function saveToSession(): void {
+        $_SESSION['userList'] = serialize($this->userList);
     }
 }
 ?>

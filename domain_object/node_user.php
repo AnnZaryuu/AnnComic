@@ -19,7 +19,7 @@ class NodeUser {
 class User extends NodeUser {
     public $saldo;
     public $purchasedComics;
-    public $rentedComics; // Add this property
+    public $rentedComics;
 
     public function __construct($userId, $name, $email, $password, $saldo = 0, $profilePicture = '') {
         parent::__construct($userId, $name, $email, $password, $profilePicture);

@@ -20,11 +20,11 @@ class KomikModel {
 
     public function initializeDefaultKomik() {
         $this->komikList = [
-            new Komik(2, 'Sousou no Frieren', ' Yamada Kanehito', 'Shounen Sunday', 6000, ['Drama', 'Adventure', 'Fantasy'], 'Assets/uploads/Poster book/Sousou no Frieren.jpg', [
+            new Komik(2, 'Naruto', 'Masashi Kishimoto', 'Shueisha', 3000, ['Action', 'Adventure', 'Fantasy'], 'Assets/uploads/Poster book/Naruto.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter1.pdf'),
                 new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter2.pdf'),
                 new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter3.pdf')
-            ], '9.0', 'menceritakan Frieren, penyihir elf yang memulai perjalanan mengenang rekan-rekan pahlawannya yang telah tiada. Dengan umur panjangnya, Frieren perlahan memahami nilai hubungan, emosi manusia, dan arti kehidupan yang singkat, sambil bertemu teman baru dan menghadapi ancaman di masa depan.', 'Assets/uploads/Poster landscape/Sousou no Frieren Landscape.jpg', 'Assets/uploads/Authors/Kanehito-Yamada.jpg', 'Assets/Comic/Manga/Naruto/Naruto_Sample.pdf'),
+            ], '9.0', 'Naruto Uzumaki, a young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.', 'Assets/uploads/Poster landscape/Landscape Naruto.png', 'Assets/uploads/Authors/Masashi_Kishimoto.png', 'Assets/Comic/Manga/Naruto/Naruto_Sample.pdf'),
             
             new Komik(3, 'Tensei shitara Slime Datta Ken', 'Fuse', 'Shounen Sirius', 3000, ['Isekai', 'Reincarnation', 'Fantasy'], 'Assets/uploads/Poster book/Tensura.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/Tensura/Tensura_Chapter1.pdf'),
@@ -51,7 +51,7 @@ class KomikModel {
                 new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter3.pdf'),
                 new Chapter(4, 'Chapter 4', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter4.pdf'),
                 new Chapter(5, 'Chapter 5', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter5.pdf')
-            ], '9.08', 'Thorfinn tumbuh mendengarkan cerita tentang Vinland...', 'Assets/uploads/Poster landscape/Vinland_Saga_bg.png', 'Assets/uploads/Authors/vindland saga author.png', 'Assets/Comic/Manga/VinlandSaga/VinlandSaga_Sample.pdf'),
+            ], '9.08', 'Thorfinn tumbuh mendengarkan cerita tentang Vinland...', 'Assets/uploads/Poster landscape/Vinland_Saga_bg.png', 'Assets/uploads/Authors/Yukimura_Makoto.png', 'Assets/Comic/Manga/VinlandSaga/VinlandSaga_Sample.pdf'),
             
             new Komik(7, 'Solo Leveling ARISE Hunter Origin', 'Chugong', 'D&C Media', 4500, ['Fantasy', 'Action', 'Adventure'], 'Assets/uploads/Poster book/Solo Leveling.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter1.pdf'),
