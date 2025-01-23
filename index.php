@@ -169,6 +169,24 @@ function handleKomik() {
             header('Location: index.php?modul=adminKomikManagement');
             exit;
 
+        case 'updateChapter':
+            $id = $_GET['id'] ?? null;
+            $chapterNumber = $_GET['chapter'] ?? null;
+            if (!$id || !$chapterNumber) {
+                die("ID komik atau nomor chapter tidak ditemukan.");
+            }
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if (isset($_FILES['chapter_file']) && $_FILES['chapter_file']['error'] == UPLOAD_ERR_OK) {
+                    $uploadDirChapter = __DIR__ . '/Assets/uploads/Chapters/';
+                    $chapterFilePath = 'Assets/uploads/Chapters/' . basename($_FILES['chapter_file']['name']);
+                    move_uploaded_file($_FILES['chapter_file']['tmp_name'], $uploadDirChapter . basename($_FILES['chapter_file']['name']));
+                    $komikModel->updateChapterFile($id, $chapterNumber, $chapterFilePath);
+                    header('Location: index.php?modul=komik&fitur=edit&id=' . $id);
+                    exit;
+                }
+            }
+            break;
+
         default:
             header('Location: index.php?modul=adminKomikManagement');
             break;
@@ -287,6 +305,13 @@ function handleEditProfile() {
         $userModel = new UserModel();
         $user = $userModel->getUserById($_SESSION['user_id']);
         if ($user) {
+            if (isset($_POST['topup']) && $_POST['topup'] == 'true') {
+                $amount = $_POST['topup_amount'];
+                $userModel->requestTopUp($user->userId, $amount);
+                header('Location: index.php?modul=profile');
+                exit();
+            }
+
             $profilePicture = $_POST['existing_profile_picture'];
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
                 $uploadDir = 'uploads/';
@@ -299,6 +324,7 @@ function handleEditProfile() {
             $userModel->updateUser(
                 $user->userId,
                 $_POST['first_name'],
+                $_POST['saldo'],
                 $_POST['email'],
                 $profilePicture,
                 $_POST['password'] ? password_hash($_POST['password'], PASSWORD_DEFAULT) : null
@@ -320,17 +346,25 @@ function handleEditProfile() {
 
 function handleBuyChapter() {
     $comicId = $_GET['id'] ?? null;
-    $price = 5000; // Set the price for the comic
-    if ($comicId) {
-        $userModel = new UserModel();
-        $userId = $_SESSION['user_id'];
-        if ($userModel->purchaseComic($userId, $comicId, $price)) {
-            header('Location: index.php?modul=library');
+    $chapter = $_GET['chapter'] ?? null;
+    if ($comicId && $chapter) {
+        $komikModel = new KomikModel();
+        $komik = $komikModel->getKomikById($comicId);
+        if ($komik) {
+            $price = $komik->harga; 
+            $userModel = new UserModel();
+            $userId = $_SESSION['user_id'];
+            if ($userModel->purchaseComic($userId, $comicId, $chapter, $price)) {
+                $userModel->addPurchasedChapter($userId, $comicId, $chapter);
+                header('Location: index.php?modul=library');
+            } else {
+                echo "Saldo Kurang :(";
+            }
         } else {
-            echo "Insufficient balance or user not found.";
+            echo "Comic not found.";
         }
     } else {
-        echo "Comic ID not provided.";
+        echo "Comic ID or chapter not provided.";
     }
 }
 
@@ -345,24 +379,24 @@ function handleFreeSample() {
 
 function handleRentChapter() {
     $comicId = $_GET['id'] ?? null;
-    if ($comicId) {
+    $chapter = $_GET['chapter'] ?? null;
+    if ($comicId && $chapter) {
         $komikModel = new KomikModel();
-        $userModel = new UserModel();
-        $userId = $_SESSION['user_id'];
-
         $komik = $komikModel->getKomikById($comicId);
         if ($komik) {
-            $price = $komik->harga; // Use the comic's price for rental
-            if ($userModel->rentComic($userId, $comicId, $price)) {
+            $price = $komik->harga * 0.5; // Use 50% of the comic's price for rental
+            $userModel = new UserModel();
+            $userId = $_SESSION['user_id'];
+            if ($userModel->rentComic($userId, $comicId, $chapter, $price)) {
                 header('Location: index.php?modul=library');
             } else {
-                echo "Insufficient balance or user not found.";
+                echo "Saldo Kurang :(";
             }
         } else {
             echo "Comic not found.";
         }
     } else {
-        echo "Comic ID not provided.";
+        echo "Comic ID or chapter not provided.";
     }
 }
 

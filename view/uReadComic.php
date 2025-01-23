@@ -1,56 +1,86 @@
 <?php
-session_start();
-require_once __DIR__ . '/../models/komik_model.php';
 require_once __DIR__ . '/../models/user_model.php';
+require_once __DIR__ . '/../models/komik_model.php';
 
-$komikId = $_GET['id'] ?? null;
-$userId = $_SESSION['user_id'] ?? null;
-$chapter = $_GET['chapter'] ?? null;
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 $userModel = new UserModel();
 $komikModel = new KomikModel();
+$userId = $_SESSION['user_id'];
+$comicId = $_GET['id'] ?? null;
+$rawChapterNumber = $_GET['chapter'] ?? null;
 
-if ($komikId && $userId) {
-    $komik = $komikModel->getKomikById($komikId);
-    $isRented = $userModel->isComicInLibrary($userId, $komikId);
+// Extract numeric part from the chapter string
+preg_match('/\d+/', $rawChapterNumber, $matches);
+$chapterNumber = isset($matches[0]) ? intval($matches[0]) : 0;
 
-    if ($komik && $isRented) {
-        // Ensure the file path is correct
-        $filePath = __DIR__ . "/../Assets/Comic/Manga/" . $komik->judul . "/" . $komik->judul . "_Chapter{$chapter}.pdf";
-
-        // Debugging information
-        echo "<pre>Debugging Info:\n";
-        echo "File path: $filePath\n";
-        echo "File exists: " . (file_exists($filePath) ? 'Yes' : 'No') . "\n";
-        echo "Is readable: " . (is_readable($filePath) ? 'Yes' : 'No') . "\n";
-        echo "Current directory: " . __DIR__ . "\n";
-        echo "Files in directory:\n";
-
-        $dirPath = __DIR__ . '/../Assets/Comic/Manga/' . $komik->judul . '/';
-        if (is_dir($dirPath)) {
-            $files = scandir($dirPath);
-            foreach ($files as $file) {
-                echo $file . "\n";
-            }
-        } else {
-            echo "Directory does not exist: $dirPath\n";
-        }
-
-        echo "</pre>";
-
-        if (!file_exists($filePath)) {
-            echo "<p>The requested resource was not found on this server.</p>";
-            exit;
-        }
-    } else {
-        echo "<p>You do not have access to this comic.</p>";
-        exit;
-    }
-} else {
-    echo "<p>Comic ID or User ID not provided.</p>";
+if (!$comicId || !$chapterNumber) {
+    echo "Comic ID or chapter not provided. Received comicId: " . htmlspecialchars($comicId) . " and rawChapterNumber: " . htmlspecialchars($rawChapterNumber) . " and chapterNumber: " . htmlspecialchars($chapterNumber);
     exit;
 }
+
+$comic = $komikModel->getKomikById($comicId);
+$purchasedComics = $userModel->getPurchasedComics($userId);
+$rentedComics = $userModel->getRentedComics($userId);
+
+if (!$comic) {
+    echo "Comic not found!";
+    exit;
+}
+
+// Check if the user has access to the comic
+$hasAccess = false;
+if (isset($purchasedComics[$comicId])) {
+    foreach ($purchasedComics[$comicId] as $purchasedChapterNumber => $value) {
+        if (intval($purchasedChapterNumber) == $chapterNumber) {
+            $hasAccess = true;
+            break;
+        }
+    }
+}
+
+if (!$hasAccess && isset($rentedComics[$comicId])) {
+    foreach ($rentedComics[$comicId] as $rentedChapterNumber => $expiryDate) {
+        if (intval(preg_replace('/\D/', '', $rentedChapterNumber)) == $chapterNumber) {
+            $hasAccess = true;
+            break;
+        }
+    }
+}
+
+if (!$hasAccess) {
+    echo "You do not have access to this comic.";
+    exit;
+}
+
+$chapter = null;
+foreach ($comic->chapters as $ch) {
+    if (intval($ch->number) == $chapterNumber) {
+        $chapter = $ch;
+        break;
+    }
+}
+
+if (!$chapter) {
+    echo "Chapter not found! Available chapters: ";
+    foreach ($comic->chapters as $ch) {
+        echo htmlspecialchars($ch->number) . " ";
+    }
+    exit;
+}
+
+// Ensure the file path is correct and the file exists
+if (!file_exists($chapter->filePath)) {
+    echo "The requested resource " . htmlspecialchars($chapter->filePath) . " was not found on this server.";
+    exit;
+}
+
+// Convert the file path to a web-accessible path
+$webFilePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath($chapter->filePath));
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,37 +91,24 @@ if ($komikId && $userId) {
 </head>
 <body class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen">
     <!-- Navbar -->
-    <?php include __DIR__ . '/../view/includes/navbar/uNavbar.php'; ?>
+    <?php include 'includes/navbar/uNavbar.php'; ?>
 
     <div class="container mx-auto py-10 px-5">
         <div class="bg-gray-800 rounded-lg shadow-lg p-8">
             <!-- Header -->
-            <h1 class="text-4xl font-extrabold text-center text-teal-400 mb-6">Read Comic</h1>
-            <p class="text-center text-gray-400 mb-8">Enjoy reading your favorite manga in a sleek and modern viewer.</p>
+            <h1 class="text-4xl font-extrabold text-center text-teal-400 mb-6"><?= htmlspecialchars($comic->judul) ?> - Chapter <?= htmlspecialchars($chapter->number) ?></h1>
+            <p class="text-center text-gray-400 mb-8">Enjoy reading the chapter you own or rented!</p>
 
             <!-- Comic Viewer Section -->
             <div class="relative border-4 border-teal-500 rounded-lg shadow-xl overflow-hidden">
-                <iframe 
-                    src="<?= htmlspecialchars($filePath) ?>#toolbar=0" 
-                    class="w-full h-[80vh]" 
-                    frameborder="0">
-                </iframe>
-            </div>
-
-            <!-- Download Button -->
-            <div class="mt-8 flex justify-center">
-                <a 
-                    href="<?= htmlspecialchars($filePath) ?>" 
-                    download 
-                    class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    Download PDF
-                </a>
+                <embed 
+                    src="<?= htmlspecialchars($webFilePath) ?>" 
+                    type="application/pdf" 
+                    class="w-full h-[80vh]" />
             </div>
         </div>
-
         <!-- Footer -->
-        <?php include __DIR__ . '/../view/includes/footer/uFooter.php'; ?>
-        
+        <?php include 'includes/footer/uFooter.php'; ?>
     </div>
 </body>
 </html>

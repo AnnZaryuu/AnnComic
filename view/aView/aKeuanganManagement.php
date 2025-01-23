@@ -1,4 +1,27 @@
 <!-- management-keuangan-crud.php -->
+<?php
+require_once __DIR__ . '/../../models/user_model.php';
+
+$userModel = new UserModel();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['approve'])) {
+    $userId = $_POST['user_id'];
+    $amount = $_POST['amount'];
+    $userModel->approveTopUp($userId, $amount);
+    // Remove the approved request from the session
+    foreach ($_SESSION['topUpRequests'] as $key => $request) {
+        if ($request['userId'] == $userId && $request['amount'] == $amount) {
+            unset($_SESSION['topUpRequests'][$key]);
+            break;
+        }
+    }
+    $_SESSION['topUpRequests'] = array_values($_SESSION['topUpRequests']); // Reindex array
+
+    // Clear the pending message for the user
+    unset($_SESSION['pendingMessage']);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +33,7 @@
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <?php include '../includes/sidebar/sidebarAdmin.php'; ?>
+        <?php include __DIR__ . '/../includes/sidebar/sidebarAdmin.php'; ?>
 
         <!-- Main Content -->
         <main class="flex-1 p-6">
@@ -37,6 +60,38 @@
                 </form>
             </section>
             <section>
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Top-Up Requests</h2>
+                <table class="min-w-full bg-white border border-gray-200 mb-6">
+                    <thead class="bg-gray-800 text-white">
+                        <tr>
+                            <th class="px-4 py-2">User ID</th>
+                            <th class="px-4 py-2">Amount</th>
+                            <th class="px-4 py-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (isset($_SESSION['topUpRequests']) && !empty($_SESSION['topUpRequests'])): ?>
+                            <?php foreach ($_SESSION['topUpRequests'] as $request): ?>
+                                <tr class="border-b">
+                                    <td class="px-4 py-2"><?= htmlspecialchars($request['userId']) ?></td>
+                                    <td class="px-4 py-2"><?= htmlspecialchars($request['amount']) ?></td>
+                                    <td class="px-4 py-2">
+                                        <form method="POST" action="">
+                                            <input type="hidden" name="user_id" value="<?= htmlspecialchars($request['userId']) ?>">
+                                            <input type="hidden" name="amount" value="<?= htmlspecialchars($request['amount']) ?>">
+                                            <button type="submit" name="approve" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Approve</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="3" class="px-4 py-2 text-center">No top-up requests</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Transactions</h2>
                 <table class="min-w-full bg-white border border-gray-200">
                     <thead class="bg-gray-800 text-white">
                         <tr>

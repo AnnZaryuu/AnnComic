@@ -18,6 +18,14 @@ if (!$user) {
     header('Location: index.php?modul=logout');
     exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['topup'])) {
+    $amount = $_POST['topup_amount'];
+    $userModel->requestTopUp($_SESSION['user_id'], $amount);
+    $_SESSION['pendingMessage'] = "Top-up request of $amount IDR is pending approval.";
+}
+
+$pendingMessage = $_SESSION['pendingMessage'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -47,6 +55,12 @@ if (!$user) {
                     <button onclick="document.getElementById('topupModal').classList.remove('hidden')" class="text-green-400 hover:underline text-sm">Top-Up Saldo</button>
                 </div>
             </div>
+
+            <?php if (isset($pendingMessage)): ?>
+                <div class="bg-yellow-500 text-black p-4 rounded mb-4">
+                    <?= htmlspecialchars($pendingMessage) ?>
+                </div>
+            <?php endif; ?>
 
             <!-- Status List -->
             <ul class="mt-4 space-y-1 text-sm">
@@ -79,7 +93,7 @@ if (!$user) {
     <div id="topupModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 class="text-xl font-bold mb-4">Top-Up Saldo</h2>
-            <form method="POST" action="index.php?modul=editProfile">
+            <form method="POST" action="">
                 <input type="hidden" name="topup" value="true">
                 <div class="mb-4">
                     <label for="topup_amount" class="block text-sm font-medium text-gray-300">Top-Up Amount</label>

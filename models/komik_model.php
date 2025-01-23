@@ -20,11 +20,11 @@ class KomikModel {
 
     public function initializeDefaultKomik() {
         $this->komikList = [
-            new Komik(2, 'Naruto', 'Masashi Kishimoto', 'Shueisha', 3000, ['Action', 'Adventure', 'Fantasy'], 'Assets/uploads/Poster book/Naruto.png', [
+            new Komik(2, 'Sousou no Frieren', ' Yamada Kanehito', 'Shounen Sunday', 6000, ['Drama', 'Adventure', 'Fantasy'], 'Assets/uploads/Poster book/Sousou no Frieren.jpg', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter1.pdf'),
                 new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter2.pdf'),
                 new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/Naruto/Naruto_Chapter3.pdf')
-            ], '9.0', 'Naruto Uzumaki, a young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.', 'Assets/uploads/Poster landscape/Landscape Naruto.png', 'Assets/uploads/Authors/Masashi_Kishimoto.png', 'Assets/Comic/Manga/Naruto/Naruto_Sample.pdf'),
+            ], '9.0', 'menceritakan Frieren, penyihir elf yang memulai perjalanan mengenang rekan-rekan pahlawannya yang telah tiada. Dengan umur panjangnya, Frieren perlahan memahami nilai hubungan, emosi manusia, dan arti kehidupan yang singkat, sambil bertemu teman baru dan menghadapi ancaman di masa depan.', 'Assets/uploads/Poster landscape/Sousou no Frieren Landscape.jpg', 'Assets/uploads/Authors/Kanehito-Yamada.jpg', 'Assets/Comic/Manga/Naruto/Naruto_Sample.pdf'),
             
             new Komik(3, 'Tensei shitara Slime Datta Ken', 'Fuse', 'Shounen Sirius', 3000, ['Isekai', 'Reincarnation', 'Fantasy'], 'Assets/uploads/Poster book/Tensura.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/Tensura/Tensura_Chapter1.pdf'),
@@ -48,14 +48,16 @@ class KomikModel {
             new Komik(6, 'Vinland Saga', 'Yukimura Makoto', 'Afternoon', 4000, ['Action', 'Adventure', 'Historical'], 'Assets/uploads/Poster book/vindland saga poster 1.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter1.pdf'),
                 new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter2.pdf'),
-                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter3.pdf')
-            ], '9.08', 'Thorfinn tumbuh mendengarkan cerita tentang Vinland...', 'Assets/uploads/Poster landscape/Vinland_Saga_bg.png', 'Assets/uploads/Authors/Yukimura_Makoto.png', 'Assets/Comic/Manga/VinlandSaga/VinlandSaga_Sample.pdf'),
+                new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter3.pdf'),
+                new Chapter(4, 'Chapter 4', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter4.pdf'),
+                new Chapter(5, 'Chapter 5', __DIR__ . '/../Assets/Comic/Manga/VinlandSaga/VinlandSaga_Chapter5.pdf')
+            ], '9.08', 'Thorfinn tumbuh mendengarkan cerita tentang Vinland...', 'Assets/uploads/Poster landscape/Vinland_Saga_bg.png', 'Assets/uploads/Authors/vindland saga author.png', 'Assets/Comic/Manga/VinlandSaga/VinlandSaga_Sample.pdf'),
             
-            new Komik(7, 'Solo Leveling', 'Chugong', 'D&C Media', 4500, ['Fantasy', 'Action', 'Adventure'], 'Assets/uploads/Poster book/Solo Leveling.png', [
+            new Komik(7, 'Solo Leveling ARISE Hunter Origin', 'Chugong', 'D&C Media', 4500, ['Fantasy', 'Action', 'Adventure'], 'Assets/uploads/Poster book/Solo Leveling.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter1.pdf'),
                 new Chapter(2, 'Chapter 2', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter2.pdf'),
                 new Chapter(3, 'Chapter 3', __DIR__ . '/../Assets/Comic/Manga/SoloLeveling/SoloLeveling_Chapter3.pdf')
-            ], '9.36', 'Sung Jin-Woo, seorang hunter lemah yang berubah menjadi hunter terkuat setelah menyelesaikan quest di dalam dungeon rahasia.', 'Assets/uploads/Poster landscape/Solo_Leveling_bg.png', 'Assets/uploads/Author/Ki-Hong-Lee.png', 'Assets/Comic/Manga/SoloLeveling/SoloLeveling_Sample.pdf'),
+            ], '9.36', 'menceritakan Jinwoo Sung, seorang Hunter lemah peringkat E, yang hidupnya berubah drastis setelah terjebak dalam dungeon mematikan dan menerima tawaran misterius dari "Sistem" yang memungkinkannya untuk naik level. Dengan kekuatan baru, Jinwoo perlahan menjadi Hunter terkuat, sambil mengungkap rahasia gelap di balik gerbang, monster, dan sistem itu sendiri. Perjalanan ini bukan hanya tentang kekuatan, tetapi juga tentang menemukan kebenaran dan takdirnya di dunia yang dipenuhi ancaman dan intrik.', 'Assets/uploads/Poster landscape/Solo_Leveling_bg.png', 'Assets/uploads/Author/Ki-Hong-Lee.png', 'Assets/Comic/Manga/SoloLeveling/SoloLeveling_Sample.pdf'),
             
             new Komik(8, 'Versatile Mage', 'Chaos', 'Qidian', 3000, ['Fantasy', 'Action', 'Adventure'], 'Assets/uploads/Poster book/Versatile Mage.png', [
                 new Chapter(1, 'Chapter 1', __DIR__ . '/../Assets/Comic/Manga/VersatileMage/VersatileMage_Chapter1.pdf'),
@@ -79,6 +81,38 @@ class KomikModel {
         array_unshift($this->komikList, $komik);
 
         $this->saveToSession();
+    }
+
+    public function deleteKomik($komikId) {
+        foreach ($this->komikList as $key => $komik) {
+            if ($komik->id == $komikId) {
+                unset($this->komikList[$key]);
+                $this->komikList = array_values($this->komikList); // Reindex array after deletion
+                break;
+            }
+        }
+
+        // Reassign IDs to the remaining comics
+        foreach ($this->komikList as $index => $komik) {
+            $komik->id = $index + 1;
+        }
+
+        $this->saveToSession();
+    }
+
+    public function updateChapterFile($komikId, $chapterNumber, $filePath) {
+        foreach ($this->komikList as $komik) {
+            if ($komik->id == $komikId) {
+                foreach ($komik->chapters as $chapter) {
+                    if ($chapter->number == $chapterNumber) {
+                        $chapter->filePath = $filePath;
+                        $this->saveToSession();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private function saveToSession() {
@@ -113,18 +147,6 @@ class KomikModel {
                 $komik->background = $background;
                 $komik->author = $author;
                 $komik->freeSample = $freeSample;
-                $this->saveToSession();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function deleteKomik($komikId) {
-        foreach ($this->komikList as $key => $komik) {
-            if ($komik->id == $komikId) {
-                unset($this->komikList[$key]);
-                $this->komikList = array_values($this->komikList); // Reindex array after deletion
                 $this->saveToSession();
                 return true;
             }

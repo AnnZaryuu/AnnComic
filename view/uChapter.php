@@ -88,9 +88,9 @@ $dataChapters = $komik->chapters;
             const message = document.getElementById('modalMessage');
             const confirmButton = document.getElementById('confirmButton');
 
-            message.textContent = `Are you sure you want to purchase ${title}?`;
+            message.textContent = `Apa kamu yakin membeli komik ini secara permanent ${title}?`;
             confirmButton.onclick = function () {
-                window.location.href = `index.php?modul=buyChapter&id=${id}`;
+                window.location.href = `index.php?modul=buyChapter&id=${id}&chapter=${title}`;
             };
 
             modal.classList.add('active');
@@ -101,9 +101,9 @@ $dataChapters = $komik->chapters;
             const message = document.getElementById('modalMessage');
             const confirmButton = document.getElementById('confirmButton');
 
-            message.textContent = `Are you sure you want to rent ${title}?`;
+            message.textContent = `Apa kamu yakin menyewa komik ini selama 3h seharga 50% harga asli ${title}?`;
             confirmButton.onclick = function () {
-                window.location.href = `index.php?modul=rentChapter&id=${id}`;
+                window.location.href = `index.php?modul=rentChapter&id=${id}&chapter=${title}`;
             };
 
             modal.classList.add('active');

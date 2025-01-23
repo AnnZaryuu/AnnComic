@@ -26,7 +26,7 @@ class AdminModel {
     }
 
     public function initializeDefaultAdmins() {
-        $this->addAdmin(new NodeAdmin($this->nextId++, 'Admin', 'admin@example.com', password_hash('admin123', PASSWORD_DEFAULT), 'admin'));
+        $this->addAdmin(new NodeAdmin($this->nextId++, 'Admin', 'admin@gmail.com', password_hash('admin123', PASSWORD_DEFAULT), 'admin'));
         // Add more default admins as needed
     }
 

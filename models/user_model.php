@@ -46,11 +46,12 @@ class UserModel {
         return null;
     }
 
-    public function updateUser($userId, $name, $email, $profilePicture = null, $password = null) {
+    public function updateUser($userId, $name,$saldo , $email, $profilePicture = null, $password = null) {
         foreach ($this->userList as $user) {
             if ($user->userId == $userId) {
                 $user->name = $name;
                 $user->email = $email;
+                $user->saldo = $saldo;
                 if ($profilePicture) {
                     $user->profilePicture = $profilePicture;
                 }
@@ -85,7 +86,7 @@ class UserModel {
         return null;
     }
 
-    public function purchaseComic($userId, $comicId, $price) {
+    public function purchaseComic($userId, $comicId, $chapter, $price) {
         foreach ($this->userList as $user) {
             if ($user->userId == $userId) {
                 if ($user->saldo >= $price) {
@@ -93,11 +94,11 @@ class UserModel {
                     if (!isset($user->purchasedComics)) {
                         $user->purchasedComics = [];
                     }
-                    $user->purchasedComics[] = $comicId;
+                    $user->purchasedComics[$comicId][$chapter] = true;
                     $this->saveToSession();
                     return true;
                 } else {
-                    return false; // Insufficient balance
+                    return false;
                 }
             }
         }
@@ -132,14 +133,14 @@ class UserModel {
         return false;
     }
 
-    public function rentComic($userId, $comicId, $price) {
+    public function rentComic($userId, $comicId, $chapter, $price) {
         $user = $this->getUserById($userId);
         if ($user && $user->saldo >= $price) {
             $newSaldo = $user->saldo - $price;
             $this->updateUserSaldo($userId, $newSaldo);
 
-            $expiryDate = date('Y-m-d H:i:s', strtotime('+1 day'));
-            $this->addComicToLibrary($userId, $comicId, $expiryDate);
+            $expiryDate = date('Y-m-d H:i:s', strtotime('+3 days'));
+            $this->addComicToLibrary($userId, $comicId, $chapter, $expiryDate);
 
             return true;
         }
@@ -157,13 +158,13 @@ class UserModel {
         return false;
     }
 
-    private function addComicToLibrary($userId, $comicId, $expiryDate) {
+    private function addComicToLibrary($userId, $comicId, $chapter, $expiryDate) {
         foreach ($this->userList as $user) {
             if ($user->userId == $userId) {
                 if (!isset($user->rentedComics)) {
                     $user->rentedComics = [];
                 }
-                $user->rentedComics[$comicId] = $expiryDate;
+                $user->rentedComics[$comicId][$chapter] = $expiryDate;
                 $this->saveToSession();
                 return true;
             }
@@ -175,9 +176,11 @@ class UserModel {
         $currentDate = date('Y-m-d H:i:s');
         foreach ($this->userList as $user) {
             if (isset($user->rentedComics)) {
-                foreach ($user->rentedComics as $comicId => $expiryDate) {
-                    if ($expiryDate < $currentDate) {
-                        unset($user->rentedComics[$comicId]);
+                foreach ($user->rentedComics as $comicId => $chapters) {
+                    foreach ($chapters as $chapter => $expiryDate) {
+                        if ($expiryDate < $currentDate) {
+                            unset($user->rentedComics[$comicId][$chapter]);
+                        }
                     }
                 }
             }
@@ -200,6 +203,26 @@ class UserModel {
             }
         }
         return [];
+    }
+
+    public function addPurchasedChapter($userId, $comicId, $chapter) {
+        $purchasedComics = $this->getPurchasedComics($userId);
+        if (!isset($purchasedComics[$comicId])) {
+            $purchasedComics[$comicId] = [];
+        }
+        $purchasedComics[$comicId][$chapter] = true;
+        $this->savePurchasedComics($userId, $purchasedComics);
+    }
+
+    private function savePurchasedComics($userId, $purchasedComics) {
+        foreach ($this->userList as $user) {
+            if ($user->userId == $userId) {
+                $user->purchasedComics = $purchasedComics;
+                $this->saveToSession();
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>

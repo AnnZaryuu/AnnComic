@@ -22,53 +22,65 @@
         $komikModel = new KomikModel();
         $userId = $_SESSION['user_id'];
         $purchasedComics = $userModel->getPurchasedComics($userId);
-        $rentedComics = $userModel->getRentedComics($userId); // Get rented comics
+        $rentedComics = $userModel->getRentedComics($userId);
         ?>
 
         <div class="bg-gray-900 min-h-screen py-8">
             <div class="max-w-6xl mx-auto space-y-4">
                 <h1 class="text-3xl font-bold mb-6 text-white">Your Library</h1>
-                <?php foreach ($purchasedComics as $comicId): ?>
-                    <?php $comic = $komikModel->getKomikById($comicId); ?>
-                    <div class="flex bg-blue-600 rounded-lg overflow-hidden shadow-md">
-                        <img src="<?= htmlspecialchars($comic->image) ?>" alt="Thumbnail" class="w-24 h-auto">
-                        <div class="flex flex-col justify-between p-4 text-white flex-1">
-                            <div>
-                                <h2 class="text-lg font-bold"><?= htmlspecialchars($comic->judul) ?></h2>
-                                <p class="text-sm"><?= htmlspecialchars($comic->penulis) ?></p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <span class="bg-white text-blue-600 text-xs font-bold px-2 py-1 rounded"><?= htmlspecialchars($comic->genre[0]) ?></span>
-                                <span class="text-xs">Chapter <?= htmlspecialchars($comic->chapters[0]->number) ?></span>
-                            </div>
-                            <div class="flex items-center justify-between text-sm">
-                                <a href="view/uReadComic.php?id=<?= $comic->id ?>&chapter=<?= urlencode($comic->chapters[0]->number) ?>" class="text-blue-400 hover:text-blue-600">Read</a>
-                                <span class="font-bold"><?= htmlspecialchars($comic->rating) ?></span>
+                <?php foreach ($purchasedComics as $comicId => $chapters): ?>
+                    <?php 
+                    $comic = $komikModel->getKomikById($comicId); 
+                    if ($comic): // Check if comic is not null
+                    ?>
+                    <?php foreach ($chapters as $chapterNumber => $value): ?>
+                        <div class="flex bg-blue-600 rounded-lg overflow-hidden shadow-md">
+                            <img src="<?= htmlspecialchars($comic->image ?? '') ?>" alt="Thumbnail" class="w-24 h-auto">
+                            <div class="flex flex-col justify-between p-4 text-white flex-1">
+                                <div>
+                                    <h2 class="text-lg font-bold"><?= htmlspecialchars($comic->judul ?? '') ?></h2>
+                                    <p class="text-sm"><?= htmlspecialchars($comic->penulis ?? '') ?></p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="bg-white text-blue-600 text-xs font-bold px-2 py-1 rounded"><?= htmlspecialchars($comic->genre[0] ?? '') ?></span>
+                                    <span class="text-xs">Chapter <?= htmlspecialchars($chapterNumber) ?></span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <a href="/view/uReadComic.php?id=<?= $comic->id ?>&chapter=<?= urlencode($chapterNumber) ?>" class="text-blue-400 hover:text-blue-600">Read</a>
+                                    <span class="font-bold"><?= htmlspecialchars($comic->rating ?? '') ?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
                 <?php endforeach; ?>
 
-                <?php foreach ($rentedComics as $comicId => $expiryDate): ?>
-                    <?php $comic = $komikModel->getKomikById($comicId); ?>
-                    <div class="flex bg-yellow-600 rounded-lg overflow-hidden shadow-md">
-                        <img src="<?= htmlspecialchars($comic->image) ?>" alt="Thumbnail" class="w-24 h-auto">
-                        <div class="flex flex-col justify-between p-4 text-white flex-1">
-                            <div>
-                                <h2 class="text-lg font-bold"><?= htmlspecialchars($comic->judul) ?></h2>
-                                <p class="text-sm"><?= htmlspecialchars($comic->penulis) ?></p>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <span class="bg-white text-yellow-600 text-xs font-bold px-2 py-1 rounded"><?= htmlspecialchars($comic->genre[0]) ?></span>
-                                <span class="text-xs">Chapter <?= htmlspecialchars($comic->chapters[0]->number) ?></span>
-                            </div>
-                            <div class="flex items-center justify-between text-sm">
-                                <a href="view/uReadComic.php?id=<?= $comic->id ?>&chapter=<?= urlencode($comic->chapters[0]->number) ?>" class="text-yellow-400 hover:text-yellow-600">Read</a>
-                                <span class="font-bold"><?= htmlspecialchars($comic->rating) ?></span>
-                                <span class="text-xs">Expires on: <?= htmlspecialchars($expiryDate) ?></span>
+                <?php foreach ($rentedComics as $comicId => $chapters): ?>
+                    <?php 
+                    $comic = $komikModel->getKomikById($comicId); 
+                    if ($comic): // Check if comic is not null
+                    ?>
+                    <?php foreach ($chapters as $chapterNumber => $expiryDate): ?>
+                        <div class="flex bg-yellow-600 rounded-lg overflow-hidden shadow-md">
+                            <img src="<?= htmlspecialchars($comic->image ?? '') ?>" alt="Thumbnail" class="w-24 h-auto">
+                            <div class="flex flex-col justify-between p-4 text-white flex-1">
+                                <div>
+                                    <h2 class="text-lg font-bold"><?= htmlspecialchars($comic->judul ?? '') ?></h2>
+                                    <p class="text-sm"><?= htmlspecialchars($comic->penulis ?? '') ?></p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="bg-white text-yellow-600 text-xs font-bold px-2 py-1 rounded"><?= htmlspecialchars($comic->genre[0] ?? '') ?></span>
+                                    <span class="text-xs">Chapter <?= htmlspecialchars($chapterNumber) ?></span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <a href="/view/uReadComic.php?id=<?= $comic->id ?>&chapter=<?= urlencode($chapterNumber) ?>" class="text-yellow-400 hover:text-yellow-600">Read</a>
+                                    <span class="font-bold"><?= htmlspecialchars($comic->rating ?? '') ?></span>
+                                    <span class="text-xs">Expires on: <?= htmlspecialchars($expiryDate) ?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </div>
         </div>
